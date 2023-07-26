@@ -19,6 +19,8 @@ let notes = [
     }
 ]
 
+app.use(express.json())
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html')
 })
@@ -41,6 +43,16 @@ app.delete('/api/notes/:id', (req, res) => {
     const id = req.params.id
     notes = notes.filter(note => note.id != id)
     res.status(204).end()
+})
+
+app.post('/api/notes', (req, res) => {
+    const maxId = notes.length > 0 
+    ? Math.max(...notes.map(a => a.id))
+    : 0
+    const note = req.body
+    note.id = maxId + 1
+    console.log(note)
+    res.json(note)
 })
 
 const PORT = 4444
