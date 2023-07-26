@@ -55,8 +55,16 @@ const generateId = () => {
 }
 
 app.post('/api/notes', (req, res) => {
-    const note = req.body
-    note.id = generateId()
+    if (!body.content) {
+        return response.status(400).json({ 
+          error: 'content missing' 
+        })
+    }
+    const note = {
+        content: body.content,
+        important: body.important || false,
+        id: generateId(),
+    }
     console.log(note)
     res.json(note)
 })
