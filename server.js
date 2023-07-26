@@ -19,7 +19,9 @@ let notes = [
     }
 ]
 
+app.set('view engine', 'ejs')
 app.use(express.json())
+app.use(express.static('public'))
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html')
@@ -45,12 +47,16 @@ app.delete('/api/notes/:id', (req, res) => {
     res.status(204).end()
 })
 
-app.post('/api/notes', (req, res) => {
+const generateId = () => {
     const maxId = notes.length > 0 
     ? Math.max(...notes.map(a => a.id))
     : 0
+    return maxId + 1
+}
+
+app.post('/api/notes', (req, res) => {
     const note = req.body
-    note.id = maxId + 1
+    note.id = generateId()
     console.log(note)
     res.json(note)
 })
